@@ -2,52 +2,35 @@
 <meta charset="utf-8">
 <head>
 	<title>Happiness</title>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <style>
-	body {
-		font-family: "Helvetica Neue", Helvetica, sans-serif;
-		font-size: 14px;
-	}
-	#wrapper {
-		height: 220px;
-	}
-
-	.person {
-		height: 20px;
-		position: relative;
-	}
-	.person .label {
-		width: 90px;
-		text-align: right;
-	}
-	.person .bar {
-		height: 19px;
-		background-color: steelblue;
-		position: absolute;
-		left: 100px;
-	}
-	.person div {
-		display: inline-block;
-	}
-	.data-view {
-		padding: 10px;
-		color: #777;
-		font-size: 12px;
-		width: 700px;
-	}
+	
+	
 </style>
 
 <body onload=initialiseData()>
 
+<nav>
+  <ul>
+    <li><strong>Home</strong></li>
+    <li><a href="scene2.html">Top Happiness Factor</a></li>
+    <li><a href="secene3.html">Other Happiness Factors</a></li>
+    
+  </ul>
+</nav>
+
+
+	
+	<h1>World Happiness Report 2017</h1>
 	<div id="wrapper">
 	</div>
 
-	<div class="menu">
-		<button onClick="updateScores();">Update scores</button>
-		<button onClick="addPerson();">Add person</button>
-		<button onClick="removePerson();">Remove person</button>
-	</div>
+    
+
+
+    <div id="tooltip"></div>
 
 	<!-- <div class="data-view"></div> -->
 
@@ -57,27 +40,25 @@
 	var myData = [];
 	var barWidth = 400;
 	var barScale = d3.scaleLinear().domain([1, 10]).range([0, barWidth]);
+	var tooltip = d3.select("#tooltip");
 
-	function randomInteger(n) {
-		return Math.floor(10 * Math.random());
-	}
 
 	async function  initialiseData() {
 	    myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/2017.csv")
-			update();
+		update();
 
 	}
 
 	function updateBars(data) {
 		var u = d3.select('#wrapper')
-			.selectAll('.person')
+			.selectAll('.country')
 			.data(data, function(d) {
 				return d.Country;
 			});
 
 		var entering = u.enter()
 			.append('div')
-			.classed('person', true);
+			.classed('country', true);
 
 		entering.append('div')
 			.classed('label', true)
@@ -86,7 +67,15 @@
 			});
 
 		entering.append('div')
-			.classed('bar', true);
+			.classed('bar', true)
+			.on("mouseover", function(d,i) {
+                tooltip.style("opacity", 1)
+               .style("left",(d3.event.pageX)+"px")
+               .style("top",(d3.event.pageY)+"px")
+               .html("GDP "+" is "+ Math.round(d.Economy_GDP_perCapita));
+             })
+            .on("mouseout", function() { tooltip.style("opacity", 0) });
+            
 
 		entering
 			.merge(u)
@@ -99,37 +88,12 @@
 		u.exit().remove();
 	}
 
-	function addPerson() {
-		
-	}
+	
 
-	function removePerson() {
-		if(myData.length === 0)
-			return;
-
-		myData.pop();
-
-		update(myData);
-	}
-
-	function updateScores() {
-		for(var i = 0; i < myData.length; i++) {
-			myData[i].score = 30 + randomInteger(70);
-		}
-
-		update(myData);
-	}
-
-	function updateDataView() {
-		d3.select('.data-view').text('Array: ' + JSON.stringify(myData));
-	}
-
+	
 	function update() {
 		updateBars(myData);
-		updateDataView(myData);
 	}
-
-	initialiseData();
 
 
 	</script>
