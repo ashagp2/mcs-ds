@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-	<title>DOM Manipulation</title>
+	<title>Happiness</title>
 </head>
 
 <style>
@@ -38,7 +38,7 @@
 	}
 </style>
 
-<body>
+<body onload=initialiseData()>
 
 	<div id="wrapper">
 	</div>
@@ -51,48 +51,28 @@
 
 	<!-- <div class="data-view"></div> -->
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+	<script src='https://d3js.org/d3.v5.min.js'></script>
 	<script>
 
-	var names = ['Andy', 'Beth', 'Craig', 'Diane', 'Evelyn', 'Fred', 'Georgia', 'Harry', 'Isabel', 'John'];
 	var myData = [];
 	var barWidth = 400;
-	var barScale = d3.scaleLinear().domain([0, 100]).range([0, barWidth]);
+	var barScale = d3.scaleLinear().domain([1, 10]).range([0, barWidth]);
 
 	function randomInteger(n) {
 		return Math.floor(10 * Math.random());
 	}
 
-	function initialiseData() {
-		myData = [
-		  {
-		    "name": "Andy",
-		    "score": 37
-		  },
-		  {
-		    "name": "Beth",
-		    "score": 39
-		  },
-		  {
-		    "name": "Craig",
-		    "score": 31
-		  },
-		  {
-		    "name": "Diane",
-		    "score": 35
-		  },
-		  {
-		    "name": "Evelyn",
-		    "score": 38
-		  }
-		];
+	async function  initialiseData() {
+	    myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/2017.csv")
+			update();
+
 	}
 
 	function updateBars(data) {
 		var u = d3.select('#wrapper')
 			.selectAll('.person')
 			.data(data, function(d) {
-				return d.name;
+				return d.Country;
 			});
 
 		var entering = u.enter()
@@ -102,7 +82,7 @@
 		entering.append('div')
 			.classed('label', true)
 			.text(function(d) {
-				return d.name;
+				return d.Country;
 			});
 
 		entering.append('div')
@@ -113,22 +93,14 @@
 			.select('.bar')
 			.transition()
 			.style('width', function(d) {
-				return barScale(d.score) + 'px';
+				return barScale(d.HappinessScore) + 'px';
 			});
 
 		u.exit().remove();
 	}
 
 	function addPerson() {
-		if(myData.length === 10)
-			return;
-
-		myData.push({
-			name: names[myData.length],
-			score: 30 + randomInteger(70)
-		});
-
-		update(myData);
+		
 	}
 
 	function removePerson() {
@@ -158,7 +130,6 @@
 	}
 
 	initialiseData();
-	update(myData);
 
 
 	</script>
