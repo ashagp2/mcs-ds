@@ -72,7 +72,7 @@
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("GDP "+" is "+ Math.round(d.Economy_GDP_perCapita));
+               .html("Happiness Score is "+" is "+ d.HappinessScore);
              })
             .on("mouseout", function() { tooltip.style("opacity", 0) });
             
