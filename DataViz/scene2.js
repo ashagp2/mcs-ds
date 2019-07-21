@@ -1,7 +1,7 @@
-var tooltip = d3.select("#tooltip");
 
 	var myData = [];
 	var margin = 50;
+	var marginAll = {top: 50, right: 50, bottom: 50, left: 50};
 	var height = 500;
 	var width = 1000;
 	
@@ -15,7 +15,7 @@ var tooltip = d3.select("#tooltip");
 	function update() {
 		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
 		
-	
+		var tooltip = d3.select("#tooltip");
 		var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 	                                       return d.Economy_GDP_perCapita; }))
@@ -39,33 +39,63 @@ attr("r", function(d){return 2+parseInt(d.HappinessScore);})
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Country "+" is "+ d.Country);
+               .html("Country: "+ d.Country + " HappinessScore: "+d.HappinessScore);
              })
 .on("mouseout", function() { tooltip.style("opacity", 0) });;
 
 //Y axis
-d3.select("svg").append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
+var svg = d3.select("svg");
+
+svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
+
+// text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 )
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Happiness Score (Ranging between 0 - 10)");    
 
 //X axis
 xAxisNew = d3.axisBottom(x);
-//xaxis.tickValues([0,1,20,30,40,50,100,110]);
 xAxisNew.tickFormat(d3.format("~s"));
 xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
 
+svg.append("text").attr("id","xAxisLabel")         
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + marginAll.top * 2) + ")")
+      .style("text-anchor", "middle")
+      .text("Importance of GDP per Capita");
+	  
 	}
-
 
 
 // A function that switch to the second dataset:
 function triggerTransition(param){
+	var svg = d3.select("svg");
+	var label = "";
   var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { if(param == "corruption") { 
+							label = "Government Corruption";
 							return d.GovernmentCorruption; 
 						} else if(param == "freedom") { 
+							label = "Freedom";
 							return d.Freedom; 
 						} else if(param == "family") { 
+							label = "Family";
 							return d.Family; 
-						}
+						} else if(param == "gdp") {
+							label = "GDP per Capita";
+							return d.Economy_GDP_perCapita; 
+						} else if(param == "life") {
+							label = "Life Expectancy";							
+							return d.LifeExpectancy; 
+						} else if(param == "generosity") { 
+						    label = "Generosity";
+							return d.Generosity; 
+						} 
 					}))
     .range([0, width]);
   d3.select("svg")
@@ -79,9 +109,25 @@ function triggerTransition(param){
 							return x(d.Freedom); 
 						} else if(param == "family") { 
 							return x(d.Family); 
-						}} );
+						} else if(param == "gdp") { 
+							return x(d.Economy_GDP_perCapita); 
+						} else if(param == "life") { 
+							return x(d.LifeExpectancy); 
+						} else if(param == "generosity") { 
+							return x(d.Generosity); 
+						} 
+                    });
 	
 	xAxis.transition().duration(1000).call(d3.axisBottom(x))
 
+	// text label for the x axis
+	d3.select("#xAxisLabel").remove();
 	
+	  
+    svg.append("text").attr("id","xAxisLabel")          
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + marginAll.top * 2) + ")")
+      .style("text-anchor", "middle")
+      .text("Importance of "+label);
 }

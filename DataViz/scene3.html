@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-	<title>Happiness Factors</title>
+	<title>Other Factors</title>
 	<link rel="stylesheet" href="styles.css">
-	<script src='https://d3js.org/d3.v5.min.js'></script>
-	<script src='scene3.js'></script>
 </head>
 
 <style>
@@ -15,18 +13,21 @@
 
 <nav>
   <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><strong>Happiness Factors</strong></li>
-    <li><a href="scene3.html">Other Happiness Factors</a></li>
+    <li><a href="index.html">World Happiness</a></li>
+    <li><a href="scene2.html">Happiness Factors</a></li>
+    <li><strong>Other Factors</strong></li>
     
   </ul>
 </nav>
+<p>A few other categories of the World Development Indicators for the year 2017 has been extracted to explore some other contributors to the happiness score.</p>
+<h2 id="1" >Explore the relationship between some other factors and the Happiness index...</h2>
 
-<h2 id="1" >Explore...</h2>
-  <p><b><a href="#1" onclick = triggerTransition("corruption")>Corruption</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("freedom")>Freedom</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("family")>Family</a></b></p>
-
+ <p><b><a  href="#1" onclick = triggerTransitionLog("gdp")>GDP</a></b><p>
+ <p><b><a  href="#1" onclick = triggerTransition("tourismOut")>Tourism Outbound</a></b><p>
+ <p><b><a  href="#1" onclick = triggerTransitionLog("tourismIn")>Tourism Inbound</a></b><p>
+ <p><b><a href="#1" onclick = triggerTransition("education")>Education Expenditure</a></b></p>
+  <p><b><a href="#1" onclick = triggerTransition("pollution")>Pollution</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("equality")>Equality</a></b></p>
 
 
 	<svg class="chart" width="500" height="500">
@@ -34,11 +35,176 @@
 
 	<div id="tooltip"></div>
 	
-	
+	<script src='https://d3js.org/d3.v5.min.js'></script>
 
 	<script>
 
+	var tooltip = d3.select("#tooltip");
+
+	var myData = [];
+	var margin = 50;
+	var height = 500;
+	var width = 1000;
+
+	async function initialiseData() {
+		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/HappinessFactors.csv")
+		update();
+	}
+
+		
+
+	function update() {
+		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
+		
 	
+		var x = d3.scaleLog()
+    .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
+	                                       return d.GDP; }))
+    .range([0, width]);
+var y = d3.scaleLinear()
+    .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
+    .range([height, 0]);
+	
+	
+		//var x = d3.scaleLog().domain([0.9, 120]).range([0,width]);
+        //var y = d3.scaleLinear().domain([3, 10]).range([height, 0]);
+		
+var svg = d3.select("svg");
+
+svg.attr("width",width+2*margin).
+attr("height",height+2*margin).
+append("g").attr("transform","translate("+margin+","+margin+")").
+selectAll("circle").data(myData).enter().append("circle").attr("cx",function(d) {return x(d.GDP);}).
+attr("cy",function(d){return y(d.HappinessScore);}).
+attr("r", function(d){return 2+parseInt(d.HappinessScore);})
+.on("mouseover", function(d,i) {
+                tooltip.style("opacity", 1)
+               .style("left",(d3.event.pageX)+"px")
+               .style("top",(d3.event.pageY)+"px")
+               .html("Country "+" is "+ d.CountryName);
+             })
+.on("mouseout", function() { tooltip.style("opacity", 0) });;
+
+//Y axis
+svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
+
+//X axis
+xAxisNew = d3.axisBottom(x);
+//xaxis.tickValues([0,1,20,30,40,50,100,110]);
+xAxisNew.tickFormat(d3.format("~s"));
+xAxis = svg.append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
+
+// text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 )
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Happiness Score (Ranging between 1 - 10)");    
+
+//Label for X axis
+svg.append("text").attr("id","xAxisLabel")         
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin * 2) + ")")
+      .style("text-anchor", "middle")
+      .text("GDP per Capita");
+	  
+
+	}
+
+
+// A function that switch to the second dataset:
+function triggerTransitionLog(param){
+  var label = "";
+  var x = d3.scaleLog()
+    .domain(d3.extent(myData, function(d) { if(param == "gdp") { 
+				label = "GDP per capita";
+				return d.GDP; 
+			  } else if(param == "tourismIn") { 
+			    label = "Tourists Inbound";
+				return d.TouristsInbound; 
+			  }
+			}))
+    .range([0, width]);
+	
+  d3.select("svg")
+    .selectAll("circle")
+    .transition()
+    .delay(100)
+    .duration(2000)
+    .attr("cx", function(d){
+			if(param == "gdp") { 
+				return x(d.GDP); 
+			} else if(param == "tourismIn") { 
+				return x(d.TouristsInbound); 
+			}
+		} );
+	
+	xAxis.transition().duration(1000).call(d3.axisBottom(x))
+	
+	updateXAxisLabel(label);
+}
+
+
+// A function that switch to the second dataset:
+function triggerTransition(param){
+	var label = "";
+  var x = d3.scaleLinear()
+    .domain(d3.extent(myData, function(d) { if(param == "tourismOut") { 
+							return d.TouristsOutbound; 
+						} else if(param == "equality") { 
+							return d.Equality; 
+						} else if(param == "pollution") { 
+							return d.PM25AirPollution; 
+						} else if(param == "life") { 
+							return d.LifeExpectancy; 
+						} else if(param == "education") { 
+							return d.EducationExpenditure; 
+						}
+					}))
+    .range([0, width]);
+  d3.select("svg")
+    .selectAll("circle")
+    .transition()
+    .delay(100)
+    .duration(2000)
+    .attr("cx", function(d){if(param == "tourismOut") { 
+							label = "Tourists Outbound";
+							return x(d.TouristsOutbound); 
+						} else if(param == "equality") {
+							label = "Equality";
+							return x(d.Equality); 
+						} else if(param == "pollution") { 
+						    label = "Air Pollution";
+							return x(d.PM25AirPollution); 
+						} else if(param == "life") { 
+						    label = "Life Expectancy";
+							return x(d.LifeExpectancy); 
+						} else if(param == "education") { 
+						    label = "Education Expenditure";
+							return x(d.EducationExpenditure); 
+						}
+						} );
+	
+	xAxis.transition().duration(1000).call(d3.axisBottom(x))
+	updateXAxisLabel(label);
+
+}
+
+function updateXAxisLabel(label) {
+// text label for the x axis
+	d3.select("#xAxisLabel").remove();
+	
+	var svg = d3.select("svg");  
+    svg.append("text").attr("id","xAxisLabel")          
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin * 2) + ")")
+      .style("text-anchor", "middle")
+      .text(label);
+}
 	</script>
 </body>
 </html>

@@ -3,6 +3,8 @@
 <head>
 	<title>Happiness Factors</title>
 	<link rel="stylesheet" href="styles.css">
+	<script src='https://d3js.org/d3.v5.min.js'></script>
+	<script src='scene2.js'></script>
 </head>
 
 <style>
@@ -13,20 +15,29 @@
 
 <nav>
   <ul>
-    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html">World Happiness</a></li>
     <li><strong>Happiness Factors</strong></li>
-    <li><a href="scene3.html">Other Happiness Factors</a></li>
+    <li><a href="scene3.html">Other Factors</a></li>
     
   </ul>
 </nav>
-
-<h2 id="1" >Explore...</h2>
- <p><b><a  href="#1" onclick = triggerTransitionLE()>Life Expectancy</a></b><p>
- <p><b><a href="#1" onclick = triggerTransitionEdu()>Education Expenditure</a></b></p>
-  <p><b><a href="#1" onclick = triggerTransition("pollution")>Pollution</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("equality")>Equality</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("corruption")>Corruption</a></b></p>
-
+<p> 
+The Happiness Score metric was measured in 2017 by asking the sampled people the question: "How would you rate your happiness on a scale of 0 to 10 where 10 is the happiest"
+The following metrics are estimates of how much they contributed toward the calculation of the Happiness Score:
+Economy (GDP per Capita): The extent to which GDP contributes to the calculation of the Happiness Score.
+Family: The extent to which Family contributes to the calculation of the Happiness Score
+Health (Life Expectancy): The extent to which Life expectancy contributed to the calculation of the Happiness Score
+Freedom: The extent to which Freedom contributed to the calculation of the Happiness Score
+Trust (Government Corruption) : The extent to which Perception of Corruption contributes to Happiness Score
+Generosity : The extent to which Generosity contributed to the calculation of the Happiness Score
+</p>
+<h2 id="1" >See the importance of the following factors on the Happiness index...</h2>
+ <p><b><a href="#1" onclick = triggerTransition("gdp")>GDP</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("family")>Family</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("life")>Life Expectancy</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("freedom")>Freedom</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("generosity")>Generosity</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("corruption")>Government Corruption</a></b></p>
 
 
 	<svg class="chart" width="500" height="500">
@@ -34,131 +45,11 @@
 
 	<div id="tooltip"></div>
 	
-	<script src='https://d3js.org/d3.v5.min.js'></script>
+	
 
 	<script>
 
-	var tooltip = d3.select("#tooltip");
-
-	var myData = [];
-	var margin = 50;
-	var height = 500;
-	var width = 1000;
 	
-	async function initialiseData() {
-		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/HappinessFactors.csv")
-		update();
-	}
-
-		
-
-	function update() {
-		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
-		
-	
-		var x = d3.scaleLog()
-    .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
-	                                       return d.GDP; }))
-    .range([0, width]);
-var y = d3.scaleLinear()
-    .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
-    .range([height, 0]);
-	
-	
-		//var x = d3.scaleLog().domain([0.9, 120]).range([0,width]);
-        //var y = d3.scaleLinear().domain([3, 10]).range([height, 0]);
-		
-
-d3.select("svg").attr("width",width+2*margin).
-attr("height",height+2*margin).
-append("g").attr("transform","translate("+margin+","+margin+")").
-selectAll("circle").data(myData).enter().append("circle").attr("cx",function(d) {return x(d.GDP);}).
-attr("cy",function(d){return y(d.HappinessScore);}).
-attr("r", function(d){return 2+parseInt(d.HappinessScore);})
-.on("mouseover", function(d,i) {
-                tooltip.style("opacity", 1)
-               .style("left",(d3.event.pageX)+"px")
-               .style("top",(d3.event.pageY)+"px")
-               .html("Country "+" is "+ d.CountryName);
-             })
-.on("mouseout", function() { tooltip.style("opacity", 0) });;
-
-//Y axis
-d3.select("svg").append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
-
-//X axis
-xAxisNew = d3.axisBottom(x);
-//xaxis.tickValues([0,1,20,30,40,50,100,110]);
-xAxisNew.tickFormat(d3.format("~s"));
-xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
-
-	}
-
-
-// A function that switch to the second dataset:
-function triggerTransitionLE(){
-  var x = d3.scaleLinear()
-    .domain(d3.extent(myData, function(d) { return d.LifeExpectancy; }))
-    .range([0, width]);
-  d3.select("svg")
-    .selectAll("circle")
-    .transition()
-    .delay(100)
-    .duration(2000)
-    .attr("cx", function(d){return x(d.LifeExpectancy)} );
-	
-	xAxis.transition().duration(1000).call(d3.axisBottom(x))
-
-	
-}
-
-// A function that switch to the second dataset:
-function triggerTransitionEdu(){
-  var x = d3.scaleLinear()
-    .domain(d3.extent(myData, function(d) { return d.EducationExpenditure; }))
-    .range([0, width]);
-  d3.select("svg")
-    .selectAll("circle")
-    .transition()
-    .delay(100)
-    .duration(2000)
-    .attr("cx", function(d){return x(d.EducationExpenditure)} );
-	
-	xAxis.transition().duration(1000).call(d3.axisBottom(x))
-
-	
-}
-
-// A function that switch to the second dataset:
-function triggerTransition(param){
-  var x = d3.scaleLinear()
-    .domain(d3.extent(myData, function(d) { if(param == "corruption") { 
-							return d.Corruption; 
-						} else if(param == "equality") { 
-							return d.Equality; 
-						} else if(param == "pollution") { 
-							return d.PM25AirPollution; 
-						}
-					}))
-    .range([0, width]);
-  d3.select("svg")
-    .selectAll("circle")
-    .transition()
-    .delay(100)
-    .duration(2000)
-    .attr("cx", function(d){if(param == "corruption") { 
-							return x(d.Corruption); 
-						} else if(param == "equality") { 
-							return x(d.Equality); 
-						} else if(param == "pollution") { 
-							return x(d.PM25AirPollution); 
-						}} );
-	
-	xAxis.transition().duration(1000).call(d3.axisBottom(x))
-
-	
-}
-
 	</script>
 </body>
 </html>
