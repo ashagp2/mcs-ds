@@ -24,11 +24,12 @@ body {
 		display: inline-block;
 	}
 	.chart rect { fill: steelblue; }
+	
 #tooltip {
     opacity: 0;
     position: absolute;
     text-align: center;
-    width: 60px; height: 40px;
+    width: 100px; height: 60px;
     background: white;
     border: 0px;
 }
