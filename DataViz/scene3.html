@@ -54,8 +54,6 @@
 		
 
 	function update() {
-		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
-		
 	
 		var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
@@ -111,7 +109,15 @@ svg.append("text").attr("id","xAxisLabel")
       .style("text-anchor", "middle")
       .text("GDP per Capita");
 	  
-
+//Title of the chart
+	  svg.append("text")
+		.attr("id","chartTitle")
+        .attr("x", (width / 2))             
+        .attr("y", margin/2)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Happiness Score vs GDP");
 	}
 
 
@@ -191,7 +197,8 @@ function triggerTransition(param){
 function updateXAxisLabel(label) {
 // text label for the x axis
 	d3.select("#xAxisLabel").remove();
-	
+	d3.select("#chartTitle").remove();
+
 	var svg = d3.select("svg");  
     svg.append("text").attr("id","xAxisLabel")          
       .attr("transform",
@@ -199,6 +206,16 @@ function updateXAxisLabel(label) {
                            (height + margin * 2) + ")")
       .style("text-anchor", "middle")
       .text(label);
+	  
+	  //Title of the chart
+	  svg.append("text")
+		.attr("id","chartTitle")
+        .attr("x", (width / 2))             
+        .attr("y", margin/2)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Happiness Score vs "+ label);
 }
 	</script>
 </body>

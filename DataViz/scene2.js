@@ -20,7 +20,7 @@
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 	                                       return d.Economy_GDP_perCapita; }))
     .range([0, width]);
-var y = d3.scaleLinear()
+	var y = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
     .range([height, 0]);
 	
@@ -28,25 +28,26 @@ var y = d3.scaleLinear()
 		//var x = d3.scaleLog().domain([0.9, 120]).range([0,width]);
         //var y = d3.scaleLinear().domain([3, 10]).range([height, 0]);
 		
+	var svg = d3.select("svg");
 
-d3.select("svg").attr("width",width+2*margin).
-attr("height",height+2*margin).
-append("g").attr("transform","translate("+margin+","+margin+")").
-selectAll("circle").data(myData).enter().append("circle").attr("cx",function(d) {return x(d.Economy_GDP_perCapita);}).
-attr("cy",function(d){return y(d.HappinessScore);}).
-attr("r", function(d){return 2+parseInt(d.HappinessScore);})
-.on("mouseover", function(d,i) {
+		
+	svg.attr("width",width+2*margin).
+		attr("height",height+2*margin).
+		append("g").attr("transform","translate("+margin+","+margin+")").
+		selectAll("circle").data(myData).enter().append("circle").attr("cx",function(d) {return x(d.Economy_GDP_perCapita);}).
+		attr("cy",function(d){return y(d.HappinessScore);}).
+		attr("r", function(d){return 2+parseInt(d.HappinessScore);})
+		.on("mouseover", function(d,i) {
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
                .html("Country: "+ d.Country + " HappinessScore: "+d.HappinessScore);
              })
-.on("mouseout", function() { tooltip.style("opacity", 0) });;
+		.on("mouseout", function() { tooltip.style("opacity", 0) });;
 
 //Y axis
-var svg = d3.select("svg");
 
-svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
+	svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
 
 // text label for the y axis
   svg.append("text")
@@ -58,17 +59,27 @@ svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axi
       .text("Happiness Score (Ranging between 0 - 10)");    
 
 //X axis
-xAxisNew = d3.axisBottom(x);
-xAxisNew.tickFormat(d3.format("~s"));
-xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
+	xAxisNew = d3.axisBottom(x);
+	xAxisNew.tickFormat(d3.format("~s"));
+	xAxis = svg.append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
 
-svg.append("text").attr("id","xAxisLabel")         
+	svg.append("text").attr("id","xAxisLabel")         
       .attr("transform",
             "translate(" + (width/2) + " ," + 
                            (height + marginAll.top * 2) + ")")
       .style("text-anchor", "middle")
       .text("Importance of GDP per Capita");
 	  
+	  //Title of the chart
+	  svg.append("text")
+		.attr("id","chartTitle")
+        .attr("x", (width / 2))             
+        .attr("y", margin/2)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("HappinessScore vs Importance of GDP");
+		
 	}
 
 
@@ -122,12 +133,24 @@ function triggerTransition(param){
 
 	// text label for the x axis
 	d3.select("#xAxisLabel").remove();
-	
+	d3.select("#chartTitle").remove();
+	  
+	  label = "Importance of "+label;
 	  
     svg.append("text").attr("id","xAxisLabel")          
       .attr("transform",
             "translate(" + (width/2) + " ," + 
                            (height + marginAll.top * 2) + ")")
       .style("text-anchor", "middle")
-      .text("Importance of "+label);
+      .text(label);
+	  
+	  //Title of the chart
+	  svg.append("text")
+		.attr("id","chartTitle")
+        .attr("x", (width / 2))             
+        .attr("y", margin/2)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Happiness Score vs "+ label);
 }

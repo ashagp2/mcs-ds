@@ -28,6 +28,8 @@
 	Leading experts across fields – economics, psychology, survey analysis, national statistics, health, public policy and more – describe how measurements of well-being can be used effectively to assess the progress of nations. 
 	The reports review the state of happiness in the world today and show how the new science of happiness explains personal and national variations in happiness.
 	</p>
+	<div id="title"> </div>
+	<p></p>
 	<div id="wrapper">
 	</div>
 
@@ -95,6 +97,15 @@
 	
 	function update() {
 		updateBars(myData);
+		//Title of the chart
+	  d3.select("#title").append("text")
+		.attr("id","chartTitle")
+        .attr("x", 400)             
+        .attr("y", 100)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Countries ranked by Happiness Score");
 	}
 
 
