@@ -124,7 +124,7 @@ function triggerTransitionLog(param){
 				return d.GDP; 
 			  } else if(param == "tourismIn") { 
 			    label = "Tourists Inbound";
-				return d.TouristsInbound; 
+				return d.TouristInMill; 
 			  }
 			}))
     .range([0, width]);
@@ -138,7 +138,7 @@ function triggerTransitionLog(param){
 			if(param == "gdp") { 
 				return x(d.GDP); 
 			} else if(param == "tourismIn") { 
-				return x(d.TouristsInbound); 
+				return x(d.TouristInMill); 
 			}
 		} );
 	
@@ -153,7 +153,7 @@ function triggerTransition(param){
 	var label = "";
   var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { if(param == "tourismOut") { 
-							return d.TouristsOutbound; 
+							return d.TouristOutMill; 
 						} else if(param == "equality") { 
 							return d.Equality; 
 						} else if(param == "pollution") { 
@@ -172,7 +172,7 @@ function triggerTransition(param){
     .duration(2000)
     .attr("cx", function(d){if(param == "tourismOut") { 
 							label = "Tourists Outbound";
-							return x(d.TouristsOutbound); 
+							return x(d.TouristOutMill); 
 						} else if(param == "equality") {
 							label = "Equality";
 							return x(d.Equality); 
