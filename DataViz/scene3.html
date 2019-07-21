@@ -137,7 +137,8 @@ function triggerTransitionLog(param){
     .attr("cx", function(d){
 			if(param == "gdp") { 
 				return x(d.GDP); 
-			} else if(param == "tourismIn") { 
+			} else if(param == "tourismIn") {
+			   console.log(x(d.TouristInMill));
 				return x(d.TouristInMill); 
 			}
 		} );
