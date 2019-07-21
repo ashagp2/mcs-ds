@@ -21,8 +21,12 @@
 </nav>
 
 <h2 id="1" >Explore...</h2>
- <p><b><a  href="#1" onclick = triggerTransitionLE()>LifeExpectancy</a></b><p>
- <p><b><a onclick = triggerTransitionPop()>Population</a></b></p>
+ <p><b><a  href="#1" onclick = triggerTransitionLE()>Life Expectancy</a></b><p>
+ <p><b><a href="#1" onclick = triggerTransitionEdu()>Education Expenditure</a></b></p>
+  <p><b><a href="#1" onclick = triggerTransition("pollution")>Pollution</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("equality")>Equality</a></b></p>
+ <p><b><a href="#1" onclick = triggerTransition("corruption")>Corruption</a></b></p>
+
 
 
 	<svg class="chart" width="500" height="500">
@@ -93,7 +97,6 @@ xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(h
 
 // A function that switch to the second dataset:
 function triggerTransitionLE(){
-console.log("triggerTransitionLE");
   var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.LifeExpectancy; }))
     .range([0, width]);
@@ -110,16 +113,46 @@ console.log("triggerTransitionLE");
 }
 
 // A function that switch to the second dataset:
-function triggerTransitionPop(){
-  var x = d3.scaleLog()
-    .domain(d3.extent(myData, function(d) { return d.Population; }))
+function triggerTransitionEdu(){
+  var x = d3.scaleLinear()
+    .domain(d3.extent(myData, function(d) { return d.EducationExpenditure; }))
     .range([0, width]);
   d3.select("svg")
     .selectAll("circle")
     .transition()
     .delay(100)
     .duration(2000)
-    .attr("cx", function(d){return x(d.Population)} );
+    .attr("cx", function(d){return x(d.EducationExpenditure)} );
+	
+	xAxis.transition().duration(1000).call(d3.axisBottom(x))
+
+	
+}
+
+// A function that switch to the second dataset:
+function triggerTransition(param){
+  var x = d3.scaleLinear()
+    .domain(d3.extent(myData, function(d) { if(param == "corruption") { 
+							return d.Corruption; 
+						} else if(param == "equality") { 
+							return d.Equality; 
+						} else if(param == "pollution") { 
+							return d.PM25AirPollution; 
+						}
+					}))
+    .range([0, width]);
+  d3.select("svg")
+    .selectAll("circle")
+    .transition()
+    .delay(100)
+    .duration(2000)
+    .attr("cx", function(d){if(param == "corruption") { 
+							return x(d.Corruption); 
+						} else if(param == "equality") { 
+							return x(d.Equality); 
+						} else if(param == "pollution") { 
+							return x(d.PM25AirPollution); 
+						}} );
 	
 	xAxis.transition().duration(1000).call(d3.axisBottom(x))
 
