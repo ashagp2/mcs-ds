@@ -20,9 +20,9 @@
   </ul>
 </nav>
 
-<h2>Explore...</h2>
- <p><b><a href="" onclick = triggerTransitionLE()> LifeExpectancy </a></b>
-    <b><a href="" onclick = triggerTransitionPop()> Population </a></b></p>
+<h2 id="1" >Explore...</h2>
+ <p><b><a  href="#1" onclick = triggerTransitionLE()>LifeExpectancy</a></b><p>
+ <p><b><a onclick = triggerTransitionPop()>Population</a></b></p>
 
 
 	<svg class="chart" width="500" height="500">
@@ -93,6 +93,7 @@ xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(h
 
 // A function that switch to the second dataset:
 function triggerTransitionLE(){
+console.log("triggerTransitionLE");
   var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.LifeExpectancy; }))
     .range([0, width]);
