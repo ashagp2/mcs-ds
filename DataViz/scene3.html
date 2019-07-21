@@ -23,7 +23,7 @@
 <h2 id="1" >Explore the relationship between some other factors and the Happiness index...</h2>
 
  <p><b><a  href="#1" onclick = triggerTransitionLog("gdp")>GDP</a></b><p>
- <p><b><a  href="#1" onclick = triggerTransition("tourismOut")>Tourism Outbound</a></b><p>
+ <p><b><a  href="#1" onclick = triggerTransitionLog("tourismOut")>Tourism Outbound</a></b><p>
  <p><b><a  href="#1" onclick = triggerTransitionLog("tourismIn")>Tourism Inbound</a></b><p>
  <p><b><a href="#1" onclick = triggerTransition("education")>Education Expenditure</a></b></p>
   <p><b><a href="#1" onclick = triggerTransition("pollution")>Pollution</a></b></p>
@@ -57,7 +57,7 @@
 		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
 		
 	
-		var x = d3.scaleLog()
+		var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 	                                       return d.GDP; }))
     .range([0, width]);
@@ -118,14 +118,17 @@ svg.append("text").attr("id","xAxisLabel")
 // A function that switch to the second dataset:
 function triggerTransitionLog(param){
   var label = "";
-  var x = d3.scaleLog()
+  var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { if(param == "gdp") { 
 				label = "GDP per capita";
 				return d.GDP; 
 			  } else if(param == "tourismIn") { 
 			    label = "Tourists Inbound";
 				return d.TouristInMill; 
-			  }
+			  } else if(param == "tourismOut") { 
+				label = "Tourists Outbound";
+				return d.TouristOutMill; 
+			 }
 			}))
     .range([0, width]);
 	
@@ -138,8 +141,9 @@ function triggerTransitionLog(param){
 			if(param == "gdp") { 
 				return x(d.GDP); 
 			} else if(param == "tourismIn") {
-			   console.log(x(d.TouristInMill));
 				return x(d.TouristInMill); 
+			} if(param == "tourismOut") { 
+				return x(d.TouristOutMill); 
 			}
 		} );
 	
@@ -153,14 +157,10 @@ function triggerTransitionLog(param){
 function triggerTransition(param){
 	var label = "";
   var x = d3.scaleLinear()
-    .domain(d3.extent(myData, function(d) { if(param == "tourismOut") { 
-							return d.TouristOutMill; 
-						} else if(param == "equality") { 
+    .domain(d3.extent(myData, function(d) { if(param == "equality") { 
 							return d.Equality; 
 						} else if(param == "pollution") { 
 							return d.PM25AirPollution; 
-						} else if(param == "life") { 
-							return d.LifeExpectancy; 
 						} else if(param == "education") { 
 							return d.EducationExpenditure; 
 						}
@@ -171,18 +171,12 @@ function triggerTransition(param){
     .transition()
     .delay(100)
     .duration(2000)
-    .attr("cx", function(d){if(param == "tourismOut") { 
-							label = "Tourists Outbound";
-							return x(d.TouristOutMill); 
-						} else if(param == "equality") {
+    .attr("cx", function(d){ if(param == "equality") {
 							label = "Equality";
 							return x(d.Equality); 
 						} else if(param == "pollution") { 
 						    label = "Air Pollution";
 							return x(d.PM25AirPollution); 
-						} else if(param == "life") { 
-						    label = "Life Expectancy";
-							return x(d.LifeExpectancy); 
 						} else if(param == "education") { 
 						    label = "Education Expenditure";
 							return x(d.EducationExpenditure); 
