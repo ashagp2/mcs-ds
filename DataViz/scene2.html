@@ -20,11 +20,16 @@
   </ul>
 </nav>
 
+<h2>Explore...</h2>
+ <p><b><a href="" onclick = triggerTransitionLE()> LifeExpectancy </a></b>
+    <b><a href="" onclick = triggerTransitionPop()> Population </a></b></p>
+
+
 	<svg class="chart" width="500" height="500">
 	</svg>
 
 	<div id="tooltip"></div>
-
+	
 	<script src='https://d3js.org/d3.v5.min.js'></script>
 
 	<script>
@@ -33,7 +38,9 @@
 
 	var myData = [];
 	var margin = 50;
-
+	var height = 500;
+	var width = 1000;
+	
 	async function initialiseData() {
 		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/HappinessFactors.csv")
 		update();
@@ -43,13 +50,11 @@
 
 	function update() {
 		//var x = d3.scaleLog().domain([200, 105000]).range([0,500]);
-		var height = 500;
-		var width = 1000;
 		
-		
+	
 		var x = d3.scaleLog()
-    .domain(d3.extent(myData, function(d) { console.log(d.GDP);
-	                                       return Math.log(parseFloat(d.GDP)); }))
+    .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
+	                                       return d.GDP; }))
     .range([0, width]);
 var y = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
@@ -78,13 +83,47 @@ attr("r", function(d){return 2+parseInt(d.HappinessScore);})
 d3.select("svg").append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
 
 //X axis
-xaxis = d3.axisBottom(x);
+xAxisNew = d3.axisBottom(x);
 //xaxis.tickValues([0,1,20,30,40,50,100,110]);
-xaxis.tickFormat(d3.format("~s"));
-d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xaxis);
+xAxisNew.tickFormat(d3.format("~s"));
+xAxis = d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(xAxisNew);
 
 	}
 
+
+// A function that switch to the second dataset:
+function triggerTransitionLE(){
+  var x = d3.scaleLinear()
+    .domain(d3.extent(myData, function(d) { return d.LifeExpectancy; }))
+    .range([0, width]);
+  d3.select("svg")
+    .selectAll("circle")
+    .transition()
+    .delay(100)
+    .duration(2000)
+    .attr("cx", function(d){return x(d.LifeExpectancy)} );
+	
+	xAxis.transition().duration(1000).call(d3.axisBottom(x))
+
+	
+}
+
+// A function that switch to the second dataset:
+function triggerTransitionPop(){
+  var x = d3.scaleLog()
+    .domain(d3.extent(myData, function(d) { return d.Population; }))
+    .range([0, width]);
+  d3.select("svg")
+    .selectAll("circle")
+    .transition()
+    .delay(100)
+    .duration(2000)
+    .attr("cx", function(d){return x(d.Population)} );
+	
+	xAxis.transition().duration(1000).call(d3.axisBottom(x))
+
+	
+}
 
 	</script>
 </body>
