@@ -22,25 +22,27 @@
   </ul>
 </nav>
 <p> 
-The Happiness Score metric was measured in 2017 by asking the sampled people the question: "How would you rate your happiness on a scale of 0 to 10 where 10 is the happiest"
-The following metrics are estimates of how much they contributed toward the calculation of the Happiness Score:
-Economy (GDP per Capita): The extent to which GDP contributes to the calculation of the Happiness Score.
-Family: The extent to which Family contributes to the calculation of the Happiness Score
-Health (Life Expectancy): The extent to which Life expectancy contributed to the calculation of the Happiness Score
-Freedom: The extent to which Freedom contributed to the calculation of the Happiness Score
-Trust (Government Corruption) : The extent to which Perception of Corruption contributes to Happiness Score
-Generosity : The extent to which Generosity contributed to the calculation of the Happiness Score
+The Happiness Score metric was measured in 2017 by asking the sampled people the question: "How would you rate your happiness on a scale of 0 to 10 where 10 is the happiest"<br>
+The following metrics are estimates of how much they contributed toward the calculation of the Happiness Score:<br>
+ - Economy (GDP per Capita): The extent to which GDP contributes to the calculation of the Happiness Score.<br>
+ - Family: The extent to which Family contributes to the calculation of the Happiness Score<br>
+ - Health (Life Expectancy): The extent to which Life expectancy contributed to the calculation of the Happiness Score<br>
+ - Freedom: The extent to which Freedom contributed to the calculation of the Happiness Score<br>
+ - Trust (Government Corruption) : The extent to which Perception of Corruption contributes to Happiness Score<br>
+ - Generosity : The extent to which Generosity contributed to the calculation of the Happiness Score<br>
 </p>
-<h2 id="1" >See the importance of the following factors on the Happiness score...</h2>
- <p><b><a href="#1" onclick = triggerTransition("gdp")>GDP</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("family")>Family</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("life")>Life Expectancy</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("freedom")>Freedom</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("generosity")>Generosity</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("corruption")>Government Corruption</a></b></p>
+<a href="https://www.kaggle.com/unsdsn/world-happiness/version/2#2017.csv">World Happiness Report</a>
+
+<h2 id="h1" >See the extent to which the following factors contributed to the Happiness score...</h2>
+ <p><b><a id="a1" href="#a1" onclick = triggerTransition("gdp")>GDP</a></b></p>
+ <p><b><a id="a2" href="#a2" onclick = triggerTransition("family")>Family</a></b></p>
+ <p><b><a id="a3" href="#a3" onclick = triggerTransition("life")>Life Expectancy</a></b></p>
+ <p><b><a id="a4" href="#a4" onclick = triggerTransition("freedom")>Freedom</a></b></p>
+ <p><b><a id="a5" href="#a5" onclick = triggerTransition("generosity")>Generosity</a></b></p>
+ <p><b><a id="a6" href="#a6" onclick = triggerTransition("corruption")>Government Corruption</a></b></p>
 
 
-	<svg class="chart" width="500" height="500">
+	<svg id = "main" class="chart" width="500" height="500">
 	</svg>
 
 	<div id="tooltip"></div>

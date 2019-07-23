@@ -19,15 +19,18 @@
     
   </ul>
 </nav>
-<p>A few other categories of the World Development Indicators for the year 2017 has been extracted to explore some other possible contributors to the happiness score.</p>
-<h2 id="1" >Explore the relationship between some other factors and the Happiness index...</h2>
+<p>A few of the World Development Indicators for the year 2017 has been extracted to explore their relationship to the happiness score.</p>
+<p>Read more about the World Development Indicators here: </p> 
+<a href="http://datatopics.worldbank.org/world-development-indicators">World Development Indicators</a>
+<br>
+<h2 id="h1" >Explore the relationship between some other factors and the Happiness score...</h2>
 
- <p><b><a  href="#1" onclick = triggerTransitionLog("gdp")>GDP</a></b><p>
- <p><b><a  href="#1" onclick = triggerTransitionLog("tourismOut")>Tourists Outbound (In Thousands)</a></b><p>
- <p><b><a  href="#1" onclick = triggerTransitionLog("tourismIn")>Tourists Inbound (In Thousands)</a></b><p>
- <p><b><a href="#1" onclick = triggerTransition("education")>Education Expenditure</a></b></p>
-  <p><b><a href="#1" onclick = triggerTransition("pollution")>Pollution (Percentage of population exposed to PM 2.5 air pollution higher than recommended levels by the WHO)</a></b></p>
- <p><b><a href="#1" onclick = triggerTransition("equality")>Equality</a></b></p>
+ <p><b><a  id="1" href="#1" onclick = triggerTransitionLog("gdp")>GDP</a></b><p>
+ <p><b><a  id ="2" href="#2" onclick = triggerTransitionLog("tourismOut")>Tourists Outbound (In Thousands)</a></b><p>
+ <p><b><a  id="3" href="#3" onclick = triggerTransitionLog("tourismIn")>Tourists Inbound (In Thousands)</a></b><p>
+ <p><b><a id="4" href="#4" onclick = triggerTransition("education")>Education Expenditure</a></b></p>
+  <p><b><a id="5" href="#5" onclick = triggerTransition("pollution")>Pollution (Percentage of population exposed to PM 2.5 air pollution higher than recommended levels by the WHO)</a></b></p>
+ <p><b><a id="6" href="#6" onclick = triggerTransition("equality")>Equality</a></b></p>
 
 
 	<svg class="chart" width="500" height="500">
@@ -64,9 +67,6 @@ var y = d3.scaleLinear()
     .range([height, 0]);
 	
 	
-		//var x = d3.scaleLog().domain([0.9, 120]).range([0,width]);
-        //var y = d3.scaleLinear().domain([3, 10]).range([height, 0]);
-		
 var svg = d3.select("svg");
 
 svg.attr("width",width+2*margin).
@@ -155,7 +155,7 @@ function triggerTransitionLog(param){
 	
 	xAxis.transition().duration(1000).call(d3.axisBottom(x))
 	
-	updateXAxisLabel(label);
+	updateXAxisLabel(label,true);
 }
 
 
@@ -190,22 +190,25 @@ function triggerTransition(param){
 						} );
 	
 	xAxis.transition().duration(1000).call(d3.axisBottom(x))
-	updateXAxisLabel(label);
+	updateXAxisLabel(label,false);
 
 }
 
-function updateXAxisLabel(label) {
+function updateXAxisLabel(label,isLog) {
 // text label for the x axis
 	d3.select("#xAxisLabel").remove();
 	d3.select("#chartTitle").remove();
-
+    var log = "";
+    if(isLog) {
+		log = "(Log scale)";
+	}
 	var svg = d3.select("svg");  
     svg.append("text").attr("id","xAxisLabel")          
       .attr("transform",
             "translate(" + (width/2) + " ," + 
                            (height + margin * 2) + ")")
       .style("text-anchor", "middle")
-      .text(label);
+      .text(label + log);
 	  
 	  //Title of the chart
 	  svg.append("text")
@@ -215,7 +218,7 @@ function updateXAxisLabel(label) {
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
-        .text("Happiness Score vs "+ label);
+        .text("Happiness Score vs "+ label );
 }
 	</script>
 </body>
