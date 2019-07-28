@@ -30,10 +30,10 @@
 	</p>
 	<div id="title"> </div>
 	<p></p>
+	
 	<div id="wrapper">
 	</div>
 
-    
     <div id="tooltip"></div>
 
 	<!-- <div class="data-view"></div> -->
@@ -46,6 +46,13 @@
 	var barScale = d3.scaleLinear().domain([1, 10]).range([0, barWidth]);
 	var tooltip = d3.select("#tooltip");
 
+    var categorical = [{ "name" : "schemeAccent", "n": 8}]
+
+
+	var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern Asia","Latin America and Caribbean","Middle East and Northern Africa","North America","Southeastern Asia",
+	"Southern Asia","Sub-Saharan Africa","Western Europe"]
+	
+	var colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
 	async function  initialiseData() {
 	    myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/2017.csv")
@@ -76,20 +83,23 @@
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Happiness Score is "+" is "+ d.HappinessScore);
+               .html("Happiness Score is "+ d.HappinessScore+"<br>Region ="+d.Region);
              })
             .on("mouseout", function() { tooltip.style("opacity", 0) });
             
-
+  
 		entering
 			.merge(u)
 			.select('.bar')
 			.transition()
 			.style('width', function(d) {
 				return barScale(d.HappinessScore) + 'px';
+			})
+			.style('background-color', function(d) {
+				return colorScale(regions.indexOf(d.Region));
 			});
 
-		u.exit().remove();
+		//u.exit().remove();
 	}
 
 	

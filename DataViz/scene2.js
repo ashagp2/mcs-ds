@@ -5,6 +5,11 @@
 	var height = 500;
 	var width = 1000;
 	
+	var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern Asia","Latin America and Caribbean","Middle East and Northern Africa","North America","Southeastern Asia",
+	"Southern Asia","Sub-Saharan Africa","Western Europe"]
+	
+	var colorScale = d3.scaleOrdinal(d3.schemeAccent);
+	
 	async function initialiseData() {
 		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/2017.csv")
 		update();
@@ -37,6 +42,7 @@
 		selectAll("circle").data(myData).enter().append("circle").attr("cx",function(d) {return x(d.Economy_GDP_perCapita);}).
 		attr("cy",function(d){return y(d.HappinessScore);}).
 		attr("r", function(d){return 2+parseInt(d.HappinessScore);})
+		.style("fill", function(d) {return colorScale(regions.indexOf(d.Region));})
 		.on("mouseover", function(d,i) {
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
@@ -80,6 +86,7 @@
         .style("text-decoration", "underline")  
         .text("HappinessScore vs Importance of GDP");
 		
+			
 	}
 
 
