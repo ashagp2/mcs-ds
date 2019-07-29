@@ -48,7 +48,7 @@
 	var myData = [];
 	var margin = 50;
 	var height = 500;
-	var width = 1500;
+	var width = 1200;
 
 var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern Asia","Latin America and Caribbean","Middle East and Northern Africa","North America","Southeastern Asia",
 	"Southern Asia","Sub-Saharan Africa","Western Europe"]
@@ -67,7 +67,7 @@ var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern
 		var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 	                                       return d.GDP; }))
-    .range([0, width]);
+    .range([0, width-margin]);
 var y = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
     .range([height, 0]);
@@ -114,7 +114,7 @@ svg.append("text").attr("id","xAxisLabel")
             "translate(" + (width/2) + " ," + 
                            (height + margin * 2) + ")")
       .style("text-anchor", "middle")
-      .text("GDP per Capita");
+      .text("GDP per Capita (Log scale)");
 	  
 //Title of the chart
 	  svg.append("text")
@@ -143,7 +143,7 @@ function triggerTransitionLog(param){
 				return d.TouristOutMill; 
 			 }
 			}))
-    .range([0, width]);
+    .range([0, width-margin]);
 	
   d3.select("svg")
     .selectAll("circle")
@@ -178,7 +178,7 @@ function triggerTransition(param){
 							return d.EducationExpenditure; 
 						}
 					}))
-    .range([0, width]);
+    .range([0, width-margin]);
   d3.select("svg")
     .selectAll("circle")
     .transition()

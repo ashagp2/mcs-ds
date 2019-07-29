@@ -3,7 +3,7 @@
 	var margin = 50;
 	var marginAll = {top: 50, right: 50, bottom: 50, left: 50};
 	var height = 500;
-	var width = 1000;
+	var width = 1200;
 	
 	var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern Asia","Latin America and Caribbean","Middle East and Northern Africa","North America","Southeastern Asia",
 	"Southern Asia","Sub-Saharan Africa","Western Europe"]
@@ -24,7 +24,7 @@
 		var x = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 	                                       return d.Economy_GDP_perCapita; }))
-    .range([0, width]);
+    .range([0, width-margin]);
 	var y = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
     .range([height, 0]);
@@ -115,7 +115,7 @@ function triggerTransition(param){
 							return d.Generosity; 
 						} 
 					}))
-    .range([0, width]);
+    .range([0, width-margin]);
   d3.select("svg")
     .selectAll("circle")
     .transition()

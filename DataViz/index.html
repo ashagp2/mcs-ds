@@ -81,7 +81,7 @@
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Happiness Score is "+ d.HappinessScore+"<br>Region ="+d.Region);
+               .html("Happiness Score : "+ d.HappinessScore+"<br>Region :"+d.Region);
              })
             .on("mouseout", function() { tooltip.style("opacity", 0) });
             
