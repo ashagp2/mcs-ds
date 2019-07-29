@@ -8,7 +8,7 @@
 	var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern Asia","Latin America and Caribbean","Middle East and Northern Africa","North America","Southeastern Asia",
 	"Southern Asia","Sub-Saharan Africa","Western Europe"]
 	
-	var colorScale = d3.scaleOrdinal(d3.schemeAccent);
+	var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 	
 	async function initialiseData() {
 		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/2017.csv")
@@ -47,7 +47,7 @@
                 tooltip.style("opacity", 1)
                .style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Country: "+ d.Country + " HappinessScore: "+d.HappinessScore);
+               .html("Country: "+ d.Country + "<br>Happiness Score : "+ d.HappinessScore+"<br>Region :"+d.Region);
              })
 		.on("mouseout", function() { tooltip.style("opacity", 0) });;
 
