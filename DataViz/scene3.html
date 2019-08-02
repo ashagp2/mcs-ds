@@ -66,7 +66,12 @@ var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern
 	
 		var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
-	                                       return d.GDP; }))
+				if(d.GDP != null && d.GDP > 0) {
+					return d.GDP; 
+				} else {
+					return 200;
+				}
+	        }))
     .range([0, width-margin]);
 var y = d3.scaleLinear()
     .domain(d3.extent(myData, function(d) { return d.HappinessScore; }))
@@ -134,7 +139,11 @@ function triggerTransitionLog(param){
   var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { if(param == "gdp") { 
 				label = "GDP per capita";
-				return d.GDP; 
+				if(d.GDP != null && d.GDP > 0) {
+					return d.GDP; 
+				} else {
+					return 200;
+				}
 			  } else if(param == "tourismIn") { 
 			    label = "Tourists Inbound";
 				return d.TouristInMill; 
