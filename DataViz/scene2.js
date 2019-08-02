@@ -44,12 +44,16 @@
 		attr("r", function(d){return 2+parseInt(d.HappinessScore);})
 		.style("fill", function(d) {return colorScale(regions.indexOf(d.Region));})
 		.on("mouseover", function(d,i) {
-                tooltip.style("opacity", 1)
-               .style("left",(d3.event.pageX)+"px")
+                tooltip.transition()
+				.duration(200)	
+				.style("opacity", 0.9);
+                tooltip.style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Country: "+ d.Country + "<br>Happiness Score : "+ d.HappinessScore+"<br>Region :"+d.Region);
+               .html("Country: "+ d.Country + "<br>Region :"+d.Region+"<br>Happiness Score : "+ d.HappinessScore);
              })
-		.on("mouseout", function() { tooltip.style("opacity", 0) });;
+		.on("mouseout", function() { tooltip.transition()		
+                .duration(500)	
+				.style("opacity", 0) });
 
 //Y axis
 

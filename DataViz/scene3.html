@@ -59,17 +59,28 @@ var regions = ["Australia and New Zealand","Central and Eastern Europe","Eastern
 		myData = await d3.csv("https://ashagp2.github.io/mcs-ds/DataViz/HappinessFactors.csv")
 		update();
 	}
-
-		
+	var minGDP;
+	
+	function sortData() {
+		minGDP = myData[0].GDP;
+		console.log(minGDP);
+		for (i = 0; i < myData.length; i++) { 
+		    var temp = parseFloat(myData[i].GDP);
+			if( temp != null && temp > 0 && temp < minGDP) {
+				minGDP = myData[i].GDP;
+			}
+			console.log(myData[i].GDP);
+			console.log("Min="+ minGDP);
+		}
+    }	
 
 	function update() {
-	
 		var x = d3.scaleSymlog()
     .domain(d3.extent(myData, function(d) { //console.log(d.GDP);
 				if(d.GDP != null && d.GDP > 0) {
 					return d.GDP; 
 				} else {
-					return 200;
+					return 230;
 				}
 	        }))
     .range([0, width-margin]);
@@ -88,12 +99,16 @@ attr("cy",function(d){return y(d.HappinessScore);}).
 attr("r", function(d){return 2+parseInt(d.HappinessScore);})
 .style("fill", function(d) {return colorScale(regions.indexOf(d.Region));})
 .on("mouseover", function(d,i) {
-                tooltip.style("opacity", 1)
-               .style("left",(d3.event.pageX)+"px")
+                tooltip.transition()
+				.duration(200)	
+				.style("opacity", 0.9);
+                tooltip.style("left",(d3.event.pageX)+"px")
                .style("top",(d3.event.pageY)+"px")
-               .html("Country :"+ d.CountryName+"<br>Happiness Score : "+ d.HappinessScore+"<br>Region :"+d.Region);
+               .html("Country :"+ d.CountryName+"<br>Region :"+d.Region+"<br>Happiness Score : "+ d.HappinessScore);
              })
-.on("mouseout", function() { tooltip.style("opacity", 0) });;
+.on("mouseout", function() { tooltip.transition()		
+                .duration(500)	
+				.style("opacity", 0) });
 
 //Y axis
 svg.append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y));
@@ -142,7 +157,7 @@ function triggerTransitionLog(param){
 				if(d.GDP != null && d.GDP > 0) {
 					return d.GDP; 
 				} else {
-					return 200;
+					return 230;
 				}
 			  } else if(param == "tourismIn") { 
 			    label = "Tourists Inbound";
